@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/rentCar.iml" filepath="$PROJECT_DIR$/rentCar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rentCar_dao/rentCar_dao.iml" filepath="$PROJECT_DIR$/rentCar_dao/rentCar_dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rentCar_pojo/rentCar_pojo.iml" filepath="$PROJECT_DIR$/rentCar_pojo/rentCar_pojo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rentCar_service/rentCar_service.iml" filepath="$PROJECT_DIR$/rentCar_service/rentCar_service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rentCar_utils/rentCar_utils.iml" filepath="$PROJECT_DIR$/rentCar_utils/rentCar_utils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rentCar_web/rentCar_web.iml" filepath="$PROJECT_DIR$/rentCar_web/rentCar_web.iml" />
+    </modules>
+  </component>
+</project>

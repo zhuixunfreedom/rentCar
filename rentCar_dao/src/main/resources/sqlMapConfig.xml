@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kgc.dao.impl">
+    <!--车辆相关-->
+    <select id="findAllCar" resultType="cn.kgc.pojo.Car">
+        select * from car
+    </select>
+    <select id="findByCarNum" resultType="cn.kgc.pojo.Car">
+      select * from car where carNum=#{carNum}
+    </select>
+    <select id="findByCarName" resultType="cn.kgc.pojo.Car">
+        SELECT * FROM car WHERE carName LIKE concat('%',#{carName},'%')
+    </select>
+    <select id="getCarAllCount" resultType="int">
+        select count(cid) from car
+    </select>
+    <select id="getSectionCars" resultType="cn.kgc.pojo.Car" parameterType="java.util.Map">
+        select * from car limit #{nowPage},#{pageNum}
+    </select>
+    <select id="updateCarUI" resultType="cn.kgc.pojo.Car" parameterType="int">
+        select * from car where cid=#{id}
+    </select>
+    <select id="login" resultType="cn.kgc.pojo.User" parameterType="java.util.Map">
+        select * from user where name=#{name} and password=#{password}
+    </select>
+
+    <insert id="saveCar" parameterType="cn.kgc.pojo.Car">
+        insert into car values(null,#{carNum},#{carImg},#{carName},#{carPrice},#{carRegistrationAddr},
+                          #{carViolationStatus},#{carDesc},1)
+    </insert>
+    <delete id="deleteCar" parameterType="int">
+        delete from car where cid=#{id}
+    </delete>
+    <update id="updateCar" parameterType="cn.kgc.pojo.Car">
+        update car set carNum=#{carNum},carImg=#{carImg},carName=#{carName},carPrice=#{carPrice},carRegistrationAddr=#{carRegistrationAddr},
+                          carViolationStatus=#{carViolationStatus},carDesc=#{carDesc},shopid=1 where cid=#{cid}
+    </update>
+    <!--用户相关-->
+    <select id="findByUsername" resultType="cn.kgc.pojo.Administrator" parameterType="String">
+        select * from administrator where username=#{username}
+    </select>
+    <select id="findUserIdByTelNo" resultType="int" parameterType="String">
+        select uid from user where telNo=#{tel}
+    </select>
+    <!--订单表相关-->
+    <!--获取所有订单-->
+    <select id="findAllOrder" resultType="cn.kgc.pojo.Order">
+        select * from orders
+    </select>
+    <!--获取某用户所有订单-->
+    <select id="findAllByUserId" resultType="cn.kgc.pojo.Order" parameterType="int">
+        select * from orders where userid=#{id}
+    </select>
+    <!--获取一个订单-->
+    <select id="findByIdOrder" resultType="cn.kgc.pojo.Order" parameterType="int">
+        select * from orders where oid=#{id}
+    </select>
+    <!--获取未完成订单-->
+    <select id="findUndoneOrder" resultType="cn.kgc.pojo.Order">
+        select * from orders where orderStatus=0
+    </select>
+    <!--获取某用户未完成订单-->
+    <select id="findUndoneOrderByUserId" resultType="cn.kgc.pojo.Order" parameterType="int">
+        select * from orders where orderStatus=0 and userid=#{id}
+    </select>
+    <!--获取未评价订单id-->
+    <select id="findNotCommentOrder" resultType="int">
+        select id from comment where comment is NULL
+    </select>
+    <!--获取某用户未评价订单id-->
+    <select id="findNotCommentOrderByUserId" resultType="int" parameterType="int">
+        select id from comment where comment is NULL and id=#{id}
+    </select>
+    <!--支付后改变订单状态-->
+    <update id="changeOrderStatus" parameterType="int">
+        UPDATE orders SET orderStatus=1,payStatus=1 WHERE oid=#{oid};
+    </update>
+    <!--支付后改变消费金额-->
+    <update id="changeMoney" parameterType="java.util.Map">
+        UPDATE USER SET rechargeMoney=#{money} WHERE uid=#{uid};
+    </update>
+    <!--获取评价总数-->
+    <select id="findAllCommentNum" resultType="int">
+        select count(id) from comment
+    </select>
+    <!--获取所有评价-->
+    <select id="findAllComment" resultType="cn.kgc.pojo.Comment">
+        select * from comment
+    </select>
+    <!--添加一个订单-->
+    <insert id="addOneOrder" parameterType="java.util.Map">
+        INSERT INTO orders VALUES(NULL,#{getCarAddress},#{returnCarAddress},#{getCarTime},#{returnCarTime},#{rentTime},#{rentType},#{rentCarName},#{rentCarNum},#{rentMoney},30,#{totalMoney},#{orderNum},#{rentCity},#{driveLong},0,0,#{userid},#{carid})
+    </insert>
+    <!--获取一个用户-->
+    <select id="findByIdUser" resultType="cn.kgc.pojo.User" parameterType="int">
+        select * from user where uid=#{id}
+    </select>
+    <!--获取一个商店-->
+    <select id="findByIdShop" resultType="cn.kgc.pojo.Shop" parameterType="int">
+        select * from shop where sid=#{id}
+    </select>
+    <!--获取一辆车-->
+    <select id="findByIdCar" resultType="cn.kgc.pojo.Car" parameterType="int">
+        select * from car where cid=#{id}
+    </select>
+    <!--获取一条评论-->
+    <select id="findByIdComment" resultType="cn.kgc.pojo.Comment" parameterType="int">
+        select * from comment where id=#{id}
+    </select>
+    <!--发布一条评论-->
+    <insert id="publishComment" parameterType="java.util.Map">
+        insert into comment values(#{oid},#{carPoint},#{qualityPoint},#{attitudePoint},#{comment},#{commentImg})
+    </insert>
+    <!--改变用户的劵信息-->
+    <update id="pay" parameterType="map">
+        UPDATE user SET driverTickets=#{driverTickets},points=#{point} WHERE uid=#{id};
+    </update>
+
+
+    <insert id="saveOrder" parameterType="cn.kgc.pojo.Order">
+        insert into orders values(null,)
+    </insert>
+    <update id="updateOrder" parameterType="cn.kgc.pojo.Order">
+        update orders set  where oid=#{id}
+    </update>
+    <delete id="deleteOrder" parameterType="int">
+        delete from orders where oid=#{id}
+    </delete>
+</mapper>

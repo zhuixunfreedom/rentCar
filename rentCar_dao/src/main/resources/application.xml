@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://mybatis.org/schema/mybatis-spring
+        http://mybatis.org/schema/mybatis-spring.xsd">
+    <!--持久层开始-->
+    <!--加载外部文件-->
+    <context:property-placeholder location="classpath*:mysql.properties"/>
+    <!--连接数据库配置信息-->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+          p:driverClassName="${Driver}" p:url="${url}"
+          p:username="${user}" p:password="${password}"/>
+    <!--创建sqlSessionFactory对象-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--mybatis和数据库连接   注入数据源-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--引入配置文件-->
+        <!--<property name="configLocation" value="classpath:sqlMapConfig.xml"/>-->
+        <!--引入映射文件-->
+        <property name="mapperLocations" value="classpath*:sqlMapConfig.xml"/>
+        <!--mybatis 其它相关配置，分页助手-->
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageInterceptor">
+                    <property name="properties">
+                        <props>
+                            <prop key= "helperDialect">mysql</prop>
+                        </props>
+                    </property>
+                </bean>
+            </array>
+        </property>
+    </bean>
+    <!--实现类所需,配置一个可以执行批量的sqlSession-->
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <constructor-arg name="executorType" value="BATCH"/>
+    </bean>
+    <!--mybatis注解所需映射，指向接口-->
+    <!--<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">-->
+        <!--<property name="basePackage" value="com.ylt.dao"/>-->
+    <!--</bean>-->
+    <!--持久层结束-->
+    <!--业务层开始-->
+    <!--1 事物管理类对象-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!--2 事物增强对象-->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="get*" read-only="true" />
+            <tx:method name="find*" read-only="true" />
+            <tx:method name="query*" read-only="true" />
+            <!--<tx:method name="add*" propagation="REQUIRED" read-only="false" rollback-for="Exception" />-->
+            <!--<tx:method name="save*" propagation="REQUIRED" read-only="false" rollback-for="Exception" />-->
+            <!--<tx:method name="insert*" propagation="REQUIRED" read-only="false" rollback-for="Exception" />-->
+            <!--<tx:method name="update*" propagation="REQUIRED" read-only="false" rollback-for="Exception" />-->
+            <!--<tx:method name="delete*" propagation="REQUIRED" read-only="false" rollback-for="Exception" />-->
+            <tx:method name="*" propagation="REQUIRES_NEW" read-only="false" rollback-for="Exception" />
+        </tx:attributes>
+    </tx:advice>
+    <!--3 配置切面-->
+    <!-- 将事务对象作用到service包下所有类的所有方法 -->
+    <aop:config>
+        <aop:advisor advice-ref="txAdvice" pointcut="execution(* cn.kgc.service.impl.*.*(..))"/>
+    </aop:config>
+    <!-- 注解方式管理事务,需要在类上使用注解@Transactional -->
+    <!--<tx:annotation-driven transaction-manager="transactionManager" />-->
+    <!--<context:component-scan base-package="com.ylt.dao.impl" />-->
+    <!--<context:component-scan base-package="com.ylt.service.impl" />-->
+    <!--<context:annotation-config />-->
+    <!--业务层结束-->
+    <!--扫描注解-->
+    <context:component-scan base-package="cn.kgc"/>
+</beans>

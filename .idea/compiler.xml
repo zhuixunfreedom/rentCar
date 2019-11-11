@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="rentCar_dao" />
+        <module name="rentCar_pojo" />
+        <module name="rentCar_service" />
+        <module name="rentCar_utils" />
+        <module name="rentCar_web" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="rentCar" target="1.7" />
+      <module name="rentCar_dao" target="1.7" />
+      <module name="rentCar_pojo" target="1.7" />
+      <module name="rentCar_service" target="1.7" />
+      <module name="rentCar_utils" target="1.7" />
+      <module name="rentCar_web" target="1.7" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
